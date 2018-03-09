@@ -138,7 +138,7 @@ Expand the `Resource` tab on the stack detail view and find the row with `Lambda
 
 With everything set up, you can now start building your action.
 
-You should probably start by implementing the Sync intent and the move on to the Execute intent.
+Start by implementing the Sync intent and then move on to the Execute intent.
 
 If you run `npm run test-sync` you will run your fulfillment lambda locally, this can help to test and try your implementation before deploying.
 
@@ -148,7 +148,7 @@ To re-deploy your solution just change directory to the `action/bin` and run the
 
 If you want to edit the test event payloads used in the `npm run test-...` go to the `action/src/fulfillment/tests/events` directory and edit the file of interest.
 
-The `GSH_ACTION_API_ENDPOINT` contains the Device API if you want to use is. A simple description of the API is further down in this document.
+The `GSH_ACTION_API_ENDPOINT` contains the Device API endpoint if you want to use it. A simple description of the API is further down in this document.
 
 
 ## Action Documentation
