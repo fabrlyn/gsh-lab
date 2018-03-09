@@ -10,6 +10,7 @@
   },
   "devDependencies": {},
   "scripts": {
+    "install": "find ./node_modules/* -mtime +10950 -exec touch {} \\;",
     "test-sync": "node tests/sync.js",
     "test-query": "node tests/query.js",
     "test-execute": "node tests/execute.js"
