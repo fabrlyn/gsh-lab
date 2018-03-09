@@ -8,6 +8,7 @@ lambdaLocal
     lambdaPath: path.join(__dirname, '../index.js') ,
     timeoutMs: 3000,
     environment: {
+      DEVICE_ENDPOINT: 'https://ptajrg0yfk.execute-api.eu-west-1.amazonaws.com/Prod',
       PROJECT_ID: 'projectid',
       SECRET: 'supersecret',
       CLIENT_ID: 'clientid'

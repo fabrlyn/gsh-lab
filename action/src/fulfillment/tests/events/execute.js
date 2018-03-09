@@ -16,16 +16,13 @@ module.exports = {
         "payload": {
           "commands": [{
             "devices": [{
-              "id": "123",
-              "customData": {}
-            },{
-              "id": "456",
+              "id": "5C:CF:7F:81:36:25",
               "customData": {}
             }],
             "execution": [{
               "command": "action.devices.commands.OnOff",
               "params": {
-                "on": true
+                "on": false 
               }
             }]
           }]
