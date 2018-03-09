@@ -1,0 +1,18 @@
+{
+  "model": "ard-0",
+  "swVersion": "0.1",
+  "manufacturer": "homeway",
+  "hwVersion": "0.1",
+  "friendlyNames": [
+    "Light One"
+  ],
+  "id": "5C:CF:7F:81:36:19",
+  "name": "test device 1",
+  "actions": [
+    "power"
+  ],
+  "state": {
+    "power": false
+  },
+  "type": "LED"
+}

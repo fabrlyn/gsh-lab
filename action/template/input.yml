@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+
+  Secret:
+    Type: String
+
+  ClientId:
+    Type: String
+
+  ProjectId:
+    Type: String
+
+  DeviceEndpoint:
+    Type: String
+
+
+Resources:
+
+  LambdaAuth:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs6.10
+      Handler: index.handler
+      CodeUri: ../src/auth
+      Environment:
+        Variables:
+          SECRET: !Ref Secret
+          CLIENT_ID: !Ref ClientId 
+          PROJECT_ID: !Ref ProjectId
+      Events:
+        ResourceAuth:
+          Type: Api
+          Properties:
+            Path: /auth
+            Method: get
+
+  LambdaFulfillment:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs6.10
+      Handler: index.handler
+      CodeUri: ../src/fulfillment
+      Environment:
+        Variables:
+          SECRET: !Ref Secret
+          CLIENT_ID: !Ref ClientId 
+          DEVICE_ENDPOINT: !Ref DeviceEndpoint 
+      Events:
+        ResourceAuth:
+          Type: Api
+          Properties:
+            Path: /fulfillment
+            Method: post 

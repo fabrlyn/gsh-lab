@@ -1,0 +1,201 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+
+  Namespace:
+    Type: String
+    Description: Use as a namespace for your stack and stack resources
+    MinLength: 5
+
+  IotEndpoint:
+    Type: String
+
+  Simulation:
+    Type: String
+
+Resources:
+
+  LambdaDevices:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs6.10
+      Handler: index.handler
+      CodeUri: ../src/devices
+      Environment:
+        Variables:
+          TABLE_NAME: !Join [ '', [gsh-device-table-, !Ref Namespace ] ]
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        ResourceAuth:
+          Type: Api
+          Properties:
+            Path: /device
+            Method: get
+
+  LambdaDevice:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs6.10
+      Handler: index.handler
+      CodeUri: ../src/device
+      Environment:
+        Variables:
+          TABLE_NAME: !Join [ '', [gsh-device-table-, !Ref Namespace ] ]
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        ResourceAuth:
+          Type: Api
+          Properties:
+            Path: /device/{id}
+            Method: get 
+
+  LambdaPower:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs6.10
+      Handler: index.handler
+      CodeUri: ../src/power
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action: 'iot:Publish'
+            Resource: !Sub 'arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/*'
+          - Effect: Allow # could maybe be removed
+            Action: 'iot:DescribeEndpoint'
+            Resource: '*'
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: !Join [ '', [gsh-device-table-, !Ref Namespace ] ]
+          IOT_ENDPOINT: !Ref IotEndpoint
+          NAMESPACE: !Ref Namespace
+          SIMULATION: !Ref Simulation
+      Events:
+        ResourceAuth:
+          Type: Api
+          Properties:
+            Path: /device/{id}/power
+            Method: post 
+
+  LambdaBrightness:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs6.10
+      Handler: index.handler
+      CodeUri: ../src/brightness
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action: 'iot:Publish'
+            Resource: !Sub 'arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/*'
+          - Effect: Allow # could maybe be removed
+            Action: 'iot:DescribeEndpoint'
+            Resource: '*'
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: !Join [ '', [gsh-device-table-, !Ref Namespace ] ]
+          IOT_ENDPOINT: !Ref IotEndpoint
+          NAMESPACE: !Ref Namespace
+          SIMULATION: !Ref Simulation
+      Events:
+        ResourceAuth:
+          Type: Api
+          Properties:
+            Path: /device/{id}/brightness
+            Method: post 
+
+  LambdaTemperature:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs6.10
+      Handler: index.handler
+      CodeUri: ../src/temperature
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action: 'iot:Publish'
+            Resource: !Sub 'arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/*'
+          - Effect: Allow # could maybe be removed
+            Action: 'iot:DescribeEndpoint'
+            Resource: '*'
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: !Join [ '', [gsh-device-table-, !Ref Namespace ] ]
+          IOT_ENDPOINT: !Ref IotEndpoint
+          NAMESPACE: !Ref Namespace
+          SIMULATION: !Ref Simulation
+      Events:
+        ResourceAuth:
+          Type: Api
+          Properties:
+            Path: /device/{id}/temperature
+            Method: post 
+
+  LambdaColor:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs6.10
+      Handler: index.handler
+      CodeUri: ../src/color
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action: 'iot:Publish'
+            Resource: !Sub 'arn:aws:iot:${AWS::Region}:${AWS::AccountId}:topic/*'
+          - Effect: Allow # could maybe be removed
+            Action: 'iot:DescribeEndpoint'
+            Resource: '*'
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: !Join [ '', [gsh-device-table-, !Ref Namespace ] ]
+          IOT_ENDPOINT: !Ref IotEndpoint
+          NAMESPACE: !Ref Namespace
+          SIMULATION: !Ref Simulation
+      Events:
+        ResourceAuth:
+          Type: Api
+          Properties:
+            Path: /device/{id}/color
+            Method: post 
+
+  LambdaChanged:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs6.10
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Handler: index.handler
+      Environment:
+        Variables:
+          TABLE_NAME: !Join [ '', [gsh-device-table-, !Ref Namespace ] ]
+      CodeUri: ../src/changed
+      Events:
+        IoT:
+          Type: IoTRule
+          Properties:
+            AwsIotSqlVersion: 2016-03-23
+            Sql: !Join [ "", [ "SELECT encode(*, 'base64') as data, topic() as topic FROM ", "'", !Ref Namespace, "/gsh/+/changed'" ] ]
+
+  TableDevice:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      TableName: !Join [ '', [gsh-device-table-, !Ref Namespace ] ]
+      AttributeDefinitions: 
+        - AttributeName: id
+          AttributeType: S
+      KeySchema: 
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5

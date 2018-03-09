@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package messages;
+
+message RequestPayload {
+  bool power = 1;
+  uint32 brightness = 2;
+  uint32 color_red  = 3;
+  uint32 color_green = 4;
+  uint32 color_blue = 5;
+  enum Type {
+    Power = 0;
+    Brightness = 1;
+    Color = 2;
+    Temperature = 3;
+  }
+  Type type = 6;
+  uint32 temperature = 7;
+}

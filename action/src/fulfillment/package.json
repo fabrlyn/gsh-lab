@@ -1,0 +1,19 @@
+{
+  "name": "fulfillment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "2.201.0",
+    "lambda-local": "^1.4.5",
+    "request": "2.83.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test-sync": "node tests/sync.js",
+    "test-query": "node tests/query.js",
+    "test-execute": "node tests/execute.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

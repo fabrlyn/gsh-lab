@@ -1,0 +1,18 @@
+{
+  "id": "123",
+  "name": "test device 1",
+  "manufacturer": "homeway",
+  "model": "ard-0",
+  "hwVersion": "0.1",
+  "swVersion": "0.1",
+  "friendlyNames": ["Light One", "White One"],
+  "actions": ["power", "brightness", "color"],
+  "type": "LED",
+  "state": {
+    "power": false,
+    "brightness": 0,
+    "colorR": 0,
+    "colorG": 0,
+    "colorB": 0
+  }
+}
